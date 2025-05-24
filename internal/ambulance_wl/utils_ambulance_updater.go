@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/psabol571/ambulance-webapi/internal/db_service"
+	"github.com/psabol571/sarsabsim-webapi/internal/db_service"
 
 	"go.opentelemetry.io/otel"
   	"go.opentelemetry.io/otel/codes"

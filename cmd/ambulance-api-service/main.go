@@ -6,14 +6,14 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/psabol571/ambulance-webapi/api"
-	"github.com/psabol571/ambulance-webapi/internal/ambulance_wl"
+	"github.com/psabol571/sarsabsim-webapi/api"
+	"github.com/psabol571/sarsabsim-webapi/internal/ambulance_wl"
 
 	"context"
 	"time"
 
 	"github.com/gin-contrib/cors"
-	"github.com/psabol571/ambulance-webapi/internal/db_service"
+	"github.com/psabol571/sarsabsim-webapi/internal/db_service"
 
 	"github.com/rs/zerolog"
   	"github.com/rs/zerolog/log"

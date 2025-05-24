@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/google/uuid"
-	"github.com/psabol571/ambulance-webapi/internal/db_service"
+	"github.com/psabol571/sarsabsim-webapi/internal/db_service"
 )
 
 type implAmbulancesAPI struct {
