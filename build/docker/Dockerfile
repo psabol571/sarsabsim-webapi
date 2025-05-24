@@ -1,19 +1,3 @@
-# use specific versions of images
-FROM openapitools/openapi-generator-cli:latest AS api
-
-WORKDIR /local
-
-COPY api api
-COPY scripts scripts
-COPY .openapi-generator-ignore .openapi-generator-ignore
-
-RUN docker-entrypoint.sh generate -c /local/scripts/generator-cfg.yaml
-
-# not used normally but redefine entrypoint for the case of checking this stage results
-ENTRYPOINT ["bash"]
-
-############################################
-
 FROM golang:latest AS build
 
 WORKDIR /app
@@ -25,19 +9,19 @@ RUN go mod download
 # copy sources - higher frequency of changes
 COPY internal/ internal/
 COPY cmd/ cmd/
-COPY --from=api /local/ ./
+COPY api/ api/
 
 # ensure tests are passing
 RUN go test ./...
 
-# create executable - ambulance-webapi-srv
+# create executable - hospital-webapi-srv
 # we want to use scratch image so setting
 # the build options in the way that will link all dependencies statically
 RUN CGO_ENABLED=0 GOOS=linux \
       go build \
       -ldflags="-w -s" \
       -installsuffix 'static' \
-      -o ./ambulance-webapi-srv ./cmd/ambulance-api-service
+      -o ./hospital-webapi-srv ./cmd/ambulance-api-service
 
 ############################################
 
@@ -45,8 +29,8 @@ FROM scratch
 
 # see https://github.com/opencontainers/image-spec/blob/main/annotations.md for details
 LABEL org.opencontainers.image.authors="Your Name"
-LABEL org.opencontainers.image.title="Ambulance Waiting List WebAPI Service"
-LABEL org.opencontainers.image.description="WEBAPI for managing entries in ambulances` waiting list"
+LABEL org.opencontainers.image.title="Hospital Management WebAPI Service"
+LABEL org.opencontainers.image.description="WEBAPI for managing hospital departments, beds, and patients"
 
 # list all variables and their default values for clarity
 ENV AMBULANCE_API_ENVIRONMENT=production
@@ -59,18 +43,17 @@ ENV AMBULANCE_API_MONGODB_USERNAME=root
 ENV AMBULANCE_API_MONGODB_PASSWORD=
 ENV AMBULANCE_API_MONGODB_TIMEOUT_SECONDS=5
 
-
 # to avoid connection errors in standalone case otel exporters are disabled by default
 ENV OTEL_TRACES_EXPORTER=none
 ENV OTEL_METRICS_EXPORTER=none
 ENV OTEL_LOGS_EXPORTER=none
 ENV LOG_LEVEL=info
 
-ENV OTEL_SERVICE_NAME=ambulance-wl-api
+ENV OTEL_SERVICE_NAME=hospital-mgmt-api
 
-COPY --from=build /app/ambulance-webapi-srv ./
+COPY --from=build /app/hospital-webapi-srv ./
 
 # Actual port may be changed during runtime
 # Default using for the simple case scenario
 EXPOSE 8080
-ENTRYPOINT ["./ambulance-webapi-srv"]
+ENTRYPOINT ["./hospital-webapi-srv"]

@@ -1,0 +1,299 @@
+openapi: 3.0.0
+servers:
+  - description: Hospital Management Endpoint
+    url: /api
+info:
+  description: Hospital Management system for Web-In-Cloud
+  version: "1.0.0"
+  title: Hospital Management Api
+  contact:
+    email: xsabol@stuba.sk
+  license:
+    name: CC BY 4.0
+    url: "https://creativecommons.org/licenses/by/4.0/"
+tags:
+- name: departments
+  description: Hospital departments management
+- name: beds
+  description: Hospital beds management
+- name: patients
+  description: Patients management
+  
+paths:
+  "/departments":
+    get:
+      tags:
+        - departments
+      summary: Get all departments
+      operationId: getDepartments
+      description: Returns list of all hospital departments
+      responses:
+        "200":
+          description: List of departments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Department"
+        "501":
+          description: Not implemented
+    post:
+      tags:
+        - departments
+      summary: Create new department
+      operationId: createDepartment
+      description: Create a new hospital department
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Department"
+        description: Department details to create
+        required: true
+      responses:
+        "201":
+          description: Department created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+        "400":
+          description: Invalid request body
+        "409":
+          description: Department already exists
+
+  "/departments/{departmentId}":
+    get:
+      tags:
+        - departments
+      summary: Get department by ID
+      operationId: getDepartment
+      description: Get details of a specific department
+      parameters:
+        - in: path
+          name: departmentId
+          description: Department ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Department details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+        "404":
+          description: Department not found
+    put:
+      tags:
+        - departments
+      summary: Update department
+      operationId: updateDepartment
+      description: Update an existing department
+      parameters:
+        - in: path
+          name: departmentId
+          description: Department ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Department"
+        description: Updated department details
+        required: true
+      responses:
+        "200":
+          description: Department updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+        "400":
+          description: Invalid request body
+        "404":
+          description: Department not found
+    delete:
+      tags:
+        - departments
+      summary: Delete department
+      operationId: deleteDepartment
+      description: Delete a department
+      parameters:
+        - in: path
+          name: departmentId
+          description: Department ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Department deleted
+        "404":
+          description: Department not found
+
+components:
+  schemas:
+    Department:
+      type: object
+      required:
+        - name
+        - floor
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+        name:
+          type: string
+          description: Department name
+          example: "Kardiológia"
+        description:
+          type: string
+          description: Department description
+          example: "Oddelenie kardiológie"
+        floor:
+          type: integer
+          description: Floor number
+          example: 3
+        capacity:
+          $ref: "#/components/schemas/DepartmentCapacity"
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+    
+    DepartmentCapacity:
+      type: object
+      properties:
+        maximum_beds:
+          type: integer
+          description: Maximum number of beds
+          example: 20
+        actual_beds:
+          type: integer
+          description: Actual number of beds available
+          example: 18
+        occupied_beds:
+          type: integer
+          description: Number of currently occupied beds
+          example: 10
+    
+    Bed:
+      type: object
+      required:
+        - department_id
+        - bed_type
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+        department_id:
+          type: string
+          description: Department ID where bed is located
+        bed_type:
+          type: string
+          description: Type of bed
+          example: "standard"
+        bed_quality:
+          type: number
+          format: double
+          description: Quality rating (0.0 - 1.0)
+          example: 0.8
+        status:
+          $ref: "#/components/schemas/BedStatus"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    
+    BedStatus:
+      type: object
+      properties:
+        patient_id:
+          type: string
+          description: Patient ID if bed is occupied
+        description:
+          type: string
+          description: Status description
+          example: "available"
+    
+    Patient:
+      type: object
+      required:
+        - first_name
+        - last_name
+        - birth_date
+        - gender
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+        first_name:
+          type: string
+          description: Patient first name
+          example: "Mária"
+        last_name:
+          type: string
+          description: Patient last name
+          example: "Svobodová"
+        birth_date:
+          type: string
+          description: Birth date
+          example: "1985-03-15"
+        gender:
+          type: string
+          description: Gender
+          example: "F"
+        phone:
+          type: string
+          description: Phone number
+          example: "+421902345678"
+        email:
+          type: string
+          description: Email address
+          example: "maria.svobodova@email.sk"
+        hospitalization_records:
+          type: array
+          items:
+            $ref: "#/components/schemas/HospitalizationRecord"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    
+    HospitalizationRecord:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+        description:
+          type: string
+          description: Hospitalization description
+          example: "Hospitalizácia pre infekčnú chorobu"
+        admission_date:
+          type: string
+          format: date-time
+          description: Admission date
+        discharge_date:
+          type: string
+          format: date-time
+          description: Discharge date
+        department_id:
+          type: string
+          description: Department ID
+        bed_id:
+          type: string
+          description: Bed ID 
