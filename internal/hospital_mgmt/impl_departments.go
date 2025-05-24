@@ -23,8 +23,8 @@ func (o *implDepartmentsAPI) CreateDepartment(c *gin.Context) {
 			http.StatusInternalServerError,
 			gin.H{
 				"status":  "Internal Server Error",
-				"message": "db not found",
-				"error":   "db not found",
+				"message": "db_service not found",
+				"error":   "db_service not found",
 			})
 		return
 	}
@@ -35,8 +35,8 @@ func (o *implDepartmentsAPI) CreateDepartment(c *gin.Context) {
 			http.StatusInternalServerError,
 			gin.H{
 				"status":  "Internal Server Error",
-				"message": "db context is not of required type",
-				"error":   "cannot cast db context to db_service.DbService",
+				"message": "db_service context is not of type db_service.DbService",
+				"error":   "cannot cast db_service context to db_service.DbService",
 			})
 		return
 	}
@@ -146,15 +146,46 @@ func (o *implDepartmentsAPI) GetDepartment(c *gin.Context) {
 }
 
 func (o *implDepartmentsAPI) GetDepartments(c *gin.Context) {
-	// Note: This would require a different method in DbService for listing all documents
-	// For now, we'll return a method not implemented response
-	c.JSON(
-		http.StatusNotImplemented,
-		gin.H{
-			"status":  "Not Implemented",
-			"message": "List all departments not yet implemented",
-			"error":   "list operation requires additional database service method",
-		})
+	value, exists := c.Get("db_service")
+	if !exists {
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{
+				"status":  "Internal Server Error",
+				"message": "db_service not found",
+				"error":   "db_service not found",
+			})
+		return
+	}
+
+	db, ok := value.(db_service.DbService[Department])
+	if !ok {
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{
+				"status":  "Internal Server Error",
+				"message": "db_service context is not of type db_service.DbService",
+				"error":   "cannot cast db_service context to db_service.DbService",
+			})
+		return
+	}
+
+	departments, err := db.FindAllDocuments(c)
+	switch err {
+	case nil:
+		c.JSON(
+			http.StatusOK,
+			departments,
+		)
+	default:
+		c.JSON(
+			http.StatusBadGateway,
+			gin.H{
+				"status":  "Bad Gateway",
+				"message": "Failed to retrieve departments from database",
+				"error":   err.Error(),
+			})
+	}
 }
 
 func (o *implDepartmentsAPI) UpdateDepartment(c *gin.Context) {

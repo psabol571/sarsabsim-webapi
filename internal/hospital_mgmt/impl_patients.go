@@ -146,13 +146,46 @@ func (o *implPatientsAPI) GetPatient(c *gin.Context) {
 }
 
 func (o *implPatientsAPI) GetPatients(c *gin.Context) {
-	c.JSON(
-		http.StatusNotImplemented,
-		gin.H{
-			"status":  "Not Implemented",
-			"message": "List all patients not yet implemented",
-			"error":   "list operation requires additional database service method",
-		})
+	value, exists := c.Get("db_service")
+	if !exists {
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{
+				"status":  "Internal Server Error",
+				"message": "db_service not found",
+				"error":   "db_service not found",
+			})
+		return
+	}
+
+	db, ok := value.(db_service.DbService[Patient])
+	if !ok {
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{
+				"status":  "Internal Server Error",
+				"message": "db_service context is not of type db_service.DbService",
+				"error":   "cannot cast db_service context to db_service.DbService",
+			})
+		return
+	}
+
+	patients, err := db.FindAllDocuments(c)
+	switch err {
+	case nil:
+		c.JSON(
+			http.StatusOK,
+			patients,
+		)
+	default:
+		c.JSON(
+			http.StatusBadGateway,
+			gin.H{
+				"status":  "Bad Gateway",
+				"message": "Failed to retrieve patients from database",
+				"error":   err.Error(),
+			})
+	}
 }
 
 func (o *implPatientsAPI) UpdatePatient(c *gin.Context) {

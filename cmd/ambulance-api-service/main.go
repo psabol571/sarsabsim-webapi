@@ -28,7 +28,7 @@ import (
 func main() {
 	output := zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: zerolog.TimeFormatUnix}
 	log.Logger = zerolog.New(output).With().
-		Str("service", "hospital-mgmt-api").
+		Str("service", "ambulance-wl-api").
 		Timestamp().
 		Caller().
 		Logger()
@@ -68,7 +68,7 @@ func main() {
 	}
 	engine := gin.New()
 	engine.Use(gin.Recovery())
-	engine.Use(otelgin.Middleware("hospital-webapi"))
+	engine.Use(otelgin.Middleware("ambulance-webapi"))
 
 	corsMiddleware := cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},

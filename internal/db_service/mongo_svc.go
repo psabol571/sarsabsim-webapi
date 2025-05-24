@@ -26,6 +26,8 @@ type DbService[DocType interface{}] interface {
 	FindDocument(ctx context.Context, id string) (*DocType, error)
 	UpdateDocument(ctx context.Context, id string, document *DocType) error
 	DeleteDocument(ctx context.Context, id string) error
+	FindAllDocuments(ctx context.Context) ([]*DocType, error)
+	FindDocumentsByFilter(ctx context.Context, filter interface{}) ([]*DocType, error)
 	Disconnect(ctx context.Context) error
 }
 
@@ -292,4 +294,98 @@ func (m *mongoSvc[DocType]) DeleteDocument(ctx context.Context, id string) error
 	}
 	_, err = collection.DeleteOne(ctx, bson.D{{Key: "id", Value: id}})
 	return err
+}
+
+func (m *mongoSvc[DocType]) FindAllDocuments(ctx context.Context) ([]*DocType, error) {
+	ctx, span := m.tracer.Start(
+		ctx,
+		"FindAllDocuments",
+		trace.WithAttributes(
+			attribute.String("mongodb.collection", m.Collection),
+		),
+	)
+	defer span.End()
+
+	ctx, contextCancel := context.WithTimeout(ctx, m.Timeout)
+	defer contextCancel()
+	client, err := m.connect(ctx)
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		return nil, err
+	}
+
+	db := client.Database(m.DbName)
+	collection := db.Collection(m.Collection)
+	
+	cursor, err := collection.Find(ctx, bson.D{})
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var documents []*DocType
+	for cursor.Next(ctx) {
+		var document *DocType
+		if err := cursor.Decode(&document); err != nil {
+			span.SetStatus(codes.Error, err.Error())
+			return nil, err
+		}
+		documents = append(documents, document)
+	}
+
+	if err := cursor.Err(); err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		return nil, err
+	}
+
+	span.SetStatus(codes.Ok, fmt.Sprintf("Found %d documents", len(documents)))
+	return documents, nil
+}
+
+func (m *mongoSvc[DocType]) FindDocumentsByFilter(ctx context.Context, filter interface{}) ([]*DocType, error) {
+	ctx, span := m.tracer.Start(
+		ctx,
+		"FindDocumentsByFilter",
+		trace.WithAttributes(
+			attribute.String("mongodb.collection", m.Collection),
+		),
+	)
+	defer span.End()
+
+	ctx, contextCancel := context.WithTimeout(ctx, m.Timeout)
+	defer contextCancel()
+	client, err := m.connect(ctx)
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		return nil, err
+	}
+
+	db := client.Database(m.DbName)
+	collection := db.Collection(m.Collection)
+	
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var documents []*DocType
+	for cursor.Next(ctx) {
+		var document *DocType
+		if err := cursor.Decode(&document); err != nil {
+			span.SetStatus(codes.Error, err.Error())
+			return nil, err
+		}
+		documents = append(documents, document)
+	}
+
+	if err := cursor.Err(); err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		return nil, err
+	}
+
+	span.SetStatus(codes.Ok, fmt.Sprintf("Found %d documents with filter", len(documents)))
+	return documents, nil
 }

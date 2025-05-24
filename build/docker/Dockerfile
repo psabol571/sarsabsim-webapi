@@ -49,7 +49,7 @@ ENV OTEL_METRICS_EXPORTER=none
 ENV OTEL_LOGS_EXPORTER=none
 ENV LOG_LEVEL=info
 
-ENV OTEL_SERVICE_NAME=hospital-mgmt-api
+ENV OTEL_SERVICE_NAME=ambulance-wl-api
 
 COPY --from=build /app/hospital-webapi-srv ./
 
