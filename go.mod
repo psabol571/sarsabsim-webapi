@@ -1,4 +1,4 @@
-module github.com/psabol571/ambulance-webapi
+module github.com/psabol571/sarsabsim-webapi
 
 go 1.24.0
 
