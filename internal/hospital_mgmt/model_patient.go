@@ -33,7 +33,7 @@ type HospitalizationRecord struct {
 
 type Patient struct {
 	// Unique identifier of the patient
-	Id string `json:"id" bson:"_id"`
+	Id string `json:"id"`
 
 	// First name of the patient
 	FirstName string `json:"first_name"`

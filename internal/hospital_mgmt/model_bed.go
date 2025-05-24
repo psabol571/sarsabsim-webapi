@@ -21,7 +21,7 @@ type BedStatus struct {
 
 type Bed struct {
 	// Unique identifier of the bed
-	Id string `json:"id" bson:"_id"`
+	Id string `json:"id"`
 
 	// Department ID where the bed is located
 	DepartmentId string `json:"department_id"`

@@ -81,13 +81,19 @@ func main() {
 	engine.Use(corsMiddleware)
 
 	// setup context update middleware - Hospital management db services
-	departmentDbService := db_service.NewMongoService[hospital_mgmt.Department](db_service.MongoServiceConfig{})
+	departmentDbService := db_service.NewMongoService[hospital_mgmt.Department](db_service.MongoServiceConfig{
+		Collection: "departments",
+	})
 	defer departmentDbService.Disconnect(context.Background())
 
-	bedDbService := db_service.NewMongoService[hospital_mgmt.Bed](db_service.MongoServiceConfig{})
+	bedDbService := db_service.NewMongoService[hospital_mgmt.Bed](db_service.MongoServiceConfig{
+		Collection: "beds",
+	})
 	defer bedDbService.Disconnect(context.Background())
 
-	patientDbService := db_service.NewMongoService[hospital_mgmt.Patient](db_service.MongoServiceConfig{})
+	patientDbService := db_service.NewMongoService[hospital_mgmt.Patient](db_service.MongoServiceConfig{
+		Collection: "patients",
+	})
 	defer patientDbService.Disconnect(context.Background())
 
 	engine.Use(func(ctx *gin.Context) {

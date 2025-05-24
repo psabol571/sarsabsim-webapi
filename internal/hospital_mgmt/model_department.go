@@ -24,7 +24,7 @@ type DepartmentCapacity struct {
 
 type Department struct {
 	// Unique identifier of the department
-	Id string `json:"id" bson:"_id"`
+	Id string `json:"id"`
 
 	// Name of the department
 	Name string `json:"name"`
