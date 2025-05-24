@@ -23,8 +23,8 @@ func (o *implPatientsAPI) CreatePatient(c *gin.Context) {
 			http.StatusInternalServerError,
 			gin.H{
 				"status":  "Internal Server Error",
-				"message": "db not found",
-				"error":   "db not found",
+				"message": "db_service not found",
+				"error":   "db_service not found",
 			})
 		return
 	}
@@ -35,8 +35,8 @@ func (o *implPatientsAPI) CreatePatient(c *gin.Context) {
 			http.StatusInternalServerError,
 			gin.H{
 				"status":  "Internal Server Error",
-				"message": "db context is not of required type",
-				"error":   "cannot cast db context to db_service.DbService",
+				"message": "db_service context is not of type db_service.DbService",
+				"error":   "cannot cast db_service context to db_service.DbService",
 			})
 		return
 	}

@@ -17,18 +17,6 @@ type HospitalizationRecord struct {
 
 	// Description of the hospitalization
 	Description string `json:"description"`
-
-	// Start date of hospitalization
-	AdmissionDate *time.Time `json:"admission_date,omitempty"`
-
-	// End date of hospitalization
-	DischargeDate *time.Time `json:"discharge_date,omitempty"`
-
-	// Department ID where patient was hospitalized
-	DepartmentId string `json:"department_id,omitempty"`
-
-	// Bed ID where patient was placed
-	BedId string `json:"bed_id,omitempty"`
 }
 
 type Patient struct {

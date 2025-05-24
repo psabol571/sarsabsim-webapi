@@ -282,18 +282,4 @@ components:
         description:
           type: string
           description: Hospitalization description
-          example: "Hospitalizácia pre infekčnú chorobu"
-        admission_date:
-          type: string
-          format: date-time
-          description: Admission date
-        discharge_date:
-          type: string
-          format: date-time
-          description: Discharge date
-        department_id:
-          type: string
-          description: Department ID
-        bed_id:
-          type: string
-          description: Bed ID 
+          example: "Hospitalizácia pre infekčnú chorobu" 

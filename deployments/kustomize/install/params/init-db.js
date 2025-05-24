@@ -158,11 +158,7 @@ if (!db.getCollectionNames().includes(patientsCollection)) {
             "hospitalization_records": [
                 {
                     "id": "hosp-001",
-                    "description": "Hospitalizácia pre srdcové problémy",
-                    "admission_date": new Date("2024-01-15T08:00:00Z"),
-                    "discharge_date": new Date("2024-01-20T14:00:00Z"),
-                    "department_id": "internal-med",
-                    "bed_id": "int-101"
+                    "description": "Hospitalizácia pre srdcové problémy"
                 }
             ],
             "created_at": new Date(),
@@ -179,10 +175,7 @@ if (!db.getCollectionNames().includes(patientsCollection)) {
             "hospitalization_records": [
                 {
                     "id": "hosp-002",
-                    "description": "Pooperačná starostlivosť",
-                    "admission_date": new Date("2024-02-01T10:00:00Z"),
-                    "department_id": "surgery",
-                    "bed_id": "surg-201"
+                    "description": "Pooperačná starostlivosť"
                 }
             ],
             "created_at": new Date(),
@@ -197,10 +190,7 @@ if (!db.getCollectionNames().includes(patientsCollection)) {
             "hospitalization_records": [
                 {
                     "id": "hosp-003",
-                    "description": "Pediatrické vyšetrenie",
-                    "admission_date": new Date("2024-02-10T09:00:00Z"),
-                    "department_id": "pediatric",
-                    "bed_id": "ped-301"
+                    "description": "Pediatrické vyšetrenie"
                 }
             ],
             "created_at": new Date(),

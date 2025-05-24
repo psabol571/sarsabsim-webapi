@@ -56,11 +56,7 @@ Represents a patient with their hospitalization history.
   "hospitalization_records": [
     {
       "id": "string",
-      "description": "string",
-      "admission_date": "datetime (optional)",
-      "discharge_date": "datetime (optional)",
-      "department_id": "string (optional)",
-      "bed_id": "string (optional)"
+      "description": "string"
     }
   ],
   "created_at": "datetime",
@@ -73,22 +69,22 @@ Represents a patient with their hospitalization history.
 ### Departments API
 - `POST /api/departments` - Create a new department
 - `GET /api/departments/:departmentId` - Get department details
-- `GET /api/departments` - List all departments (not yet implemented)
+- `GET /api/departments` - List all departments
 - `PUT /api/departments/:departmentId` - Update department
 - `DELETE /api/departments/:departmentId` - Delete department
 
 ### Beds API
 - `POST /api/beds` - Create a new bed
 - `GET /api/beds/:bedId` - Get bed details
-- `GET /api/beds` - List all beds (not yet implemented)
-- `GET /api/departments/:departmentId/beds` - List beds by department (not yet implemented)
+- `GET /api/beds` - List all beds
+- `GET /api/departments/:departmentId/beds` - List beds by department
 - `PUT /api/beds/:bedId` - Update bed
 - `DELETE /api/beds/:bedId` - Delete bed
 
 ### Patients API
 - `POST /api/patients` - Create a new patient
 - `GET /api/patients/:patientId` - Get patient details
-- `GET /api/patients` - List all patients (not yet implemented)
+- `GET /api/patients` - List all patients
 - `PUT /api/patients/:patientId` - Update patient
 - `DELETE /api/patients/:patientId` - Delete patient
 
@@ -148,9 +144,7 @@ curl -X POST http://localhost:8080/api/patients \
 curl -X POST http://localhost:8080/api/patients/patient-123/hospitalizations \
   -H "Content-Type: application/json" \
   -d '{
-    "description": "Hospitalizácia pre infekčnú chorobu",
-    "department_id": "dept-123",
-    "bed_id": "bed-456"
+    "description": "Hospitalizácia pre infekčnú chorobu"
   }'
 ```
 
@@ -185,5 +179,5 @@ go test ./internal/hospital_mgmt/ -run TestPatientSuite
 - All models include automatic ID generation using UUID if not provided
 - Timestamps (`created_at`, `updated_at`) are automatically managed
 - The implementation preserves creation timestamps during updates
-- List operations (GET collections) are marked as not implemented and would require additional database service methods
+- All endpoints are fully implemented with complete CRUD operations and list functionality
 - The module uses BSON tags for MongoDB integration alongside JSON tags 
