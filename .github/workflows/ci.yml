@@ -52,7 +52,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5.7.0
       with:
-        images: patriksabol/ambulance-wl-webapi
+        images: patriksabol/sarsabsim-ambulance-wl-webapi
         tags: |
           type=schedule
           type=ref,event=branch
