@@ -59,7 +59,7 @@ spec:
 
       containers:
       - name: cv1sarsabsim-ambulance-wl-webapi-container
-        image: patriksabol/ambulance-wl-webapi:latest
+        image: patriksabol/sarsabsim-ambulance-wl-webapi:latest
         imagePullPolicy: Always
         ports:
         - name: webapi-port
