@@ -221,6 +221,9 @@ func (o *implBedsAPI) GetBedsByDepartment(c *gin.Context) {
 	beds, err := db.FindDocumentsByFilter(c, filter)
 	switch err {
 	case nil:
+		if beds == nil {
+			beds = []*Bed{}
+		}
 		c.JSON(
 			http.StatusOK,
 			beds,
