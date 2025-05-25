@@ -215,7 +215,7 @@ func (o *implBedsAPI) GetBedsByDepartment(c *gin.Context) {
 
 	departmentId := c.Param("departmentId")
 	filter := map[string]interface{}{
-		"department_id": departmentId,
+		"departmentid": departmentId,
 	}
 
 	beds, err := db.FindDocumentsByFilter(c, filter)

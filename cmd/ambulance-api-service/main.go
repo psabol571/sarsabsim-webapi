@@ -99,7 +99,10 @@ func main() {
 	engine.Use(func(ctx *gin.Context) {
 		// Set appropriate db service based on the request path
 		path := ctx.Request.URL.Path
-		if strings.HasPrefix(path, "/api/departments") {
+		if strings.Contains(path, "/api/departments/") && strings.HasSuffix(path, "/beds") {
+			// Handle /api/departments/:departmentId/beds
+			ctx.Set("db_service", bedDbService)
+		} else if strings.HasPrefix(path, "/api/departments") {
 			ctx.Set("db_service", departmentDbService)
 		} else if strings.HasPrefix(path, "/api/beds") {
 			ctx.Set("db_service", bedDbService)
