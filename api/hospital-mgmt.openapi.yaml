@@ -136,6 +136,356 @@ paths:
         "404":
           description: Department not found
 
+  "/departments/{departmentId}/beds":
+    get:
+      tags:
+        - beds
+      summary: Get beds by department
+      operationId: getBedsByDepartment
+      description: Get list of beds for a specific department
+      parameters:
+        - in: path
+          name: departmentId
+          description: Department ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of beds in department
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Bed"
+        "404":
+          description: Department not found
+
+  "/beds":
+    get:
+      tags:
+        - beds
+      summary: Get all beds
+      operationId: getBeds
+      description: Returns list of all beds
+      responses:
+        "200":
+          description: List of beds
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Bed"
+    post:
+      tags:
+        - beds
+      summary: Create new bed
+      operationId: createBed
+      description: Create a new bed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Bed"
+        description: Bed details to create
+        required: true
+      responses:
+        "201":
+          description: Bed created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bed"
+        "400":
+          description: Invalid request body
+        "409":
+          description: Bed already exists
+
+  "/beds/{bedId}":
+    get:
+      tags:
+        - beds
+      summary: Get bed by ID
+      operationId: getBed
+      description: Get details of a specific bed
+      parameters:
+        - in: path
+          name: bedId
+          description: Bed ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Bed details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bed"
+        "404":
+          description: Bed not found
+    put:
+      tags:
+        - beds
+      summary: Update bed
+      operationId: updateBed
+      description: Update an existing bed
+      parameters:
+        - in: path
+          name: bedId
+          description: Bed ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Bed"
+        description: Updated bed details
+        required: true
+      responses:
+        "200":
+          description: Bed updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bed"
+        "400":
+          description: Invalid request body
+        "404":
+          description: Bed not found
+    delete:
+      tags:
+        - beds
+      summary: Delete bed
+      operationId: deleteBed
+      description: Delete a bed
+      parameters:
+        - in: path
+          name: bedId
+          description: Bed ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Bed deleted
+        "404":
+          description: Bed not found
+
+  "/patients":
+    get:
+      tags:
+        - patients
+      summary: Get all patients
+      operationId: getPatients
+      description: Returns list of all patients
+      responses:
+        "200":
+          description: List of patients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Patient"
+    post:
+      tags:
+        - patients
+      summary: Create new patient
+      operationId: createPatient
+      description: Create a new patient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Patient"
+        description: Patient details to create
+        required: true
+      responses:
+        "201":
+          description: Patient created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patient"
+        "400":
+          description: Invalid request body
+        "409":
+          description: Patient already exists
+
+  "/patients/{patientId}":
+    get:
+      tags:
+        - patients
+      summary: Get patient by ID
+      operationId: getPatient
+      description: Get details of a specific patient
+      parameters:
+        - in: path
+          name: patientId
+          description: Patient ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Patient details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patient"
+        "404":
+          description: Patient not found
+    put:
+      tags:
+        - patients
+      summary: Update patient
+      operationId: updatePatient
+      description: Update an existing patient
+      parameters:
+        - in: path
+          name: patientId
+          description: Patient ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Patient"
+        description: Updated patient details
+        required: true
+      responses:
+        "200":
+          description: Patient updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patient"
+        "400":
+          description: Invalid request body
+        "404":
+          description: Patient not found
+    delete:
+      tags:
+        - patients
+      summary: Delete patient
+      operationId: deletePatient
+      description: Delete a patient
+      parameters:
+        - in: path
+          name: patientId
+          description: Patient ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Patient deleted
+        "404":
+          description: Patient not found
+
+  "/patients/{patientId}/hospitalizations":
+    post:
+      tags:
+        - patients
+      summary: Add hospitalization record
+      operationId: addHospitalizationRecord
+      description: Add a new hospitalization record to a patient
+      parameters:
+        - in: path
+          name: patientId
+          description: Patient ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HospitalizationRecord"
+        description: Hospitalization record to add
+        required: true
+      responses:
+        "201":
+          description: Hospitalization record added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patient"
+        "400":
+          description: Invalid request body
+        "404":
+          description: Patient not found
+
+  "/patients/{patientId}/hospitalizations/{recordId}":
+    put:
+      tags:
+        - patients
+      summary: Update hospitalization record
+      operationId: updateHospitalizationRecord
+      description: Update a hospitalization record
+      parameters:
+        - in: path
+          name: patientId
+          description: Patient ID
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: recordId
+          description: Hospitalization record ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HospitalizationRecord"
+        description: Updated hospitalization record
+        required: true
+      responses:
+        "200":
+          description: Hospitalization record updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patient"
+        "400":
+          description: Invalid request body
+        "404":
+          description: Patient or record not found
+    delete:
+      tags:
+        - patients
+      summary: Delete hospitalization record
+      operationId: deleteHospitalizationRecord
+      description: Delete a hospitalization record
+      parameters:
+        - in: path
+          name: patientId
+          description: Patient ID
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: recordId
+          description: Hospitalization record ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Hospitalization record deleted
+        "404":
+          description: Patient or record not found
+
 components:
   schemas:
     Department:
